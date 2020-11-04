@@ -15,7 +15,6 @@ branches:
 install:
     - docker-compose build
     
-
 script:
     - docker-compose up -d
     - echo "no test!"
