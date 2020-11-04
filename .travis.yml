@@ -11,7 +11,7 @@ branches:
     - only:
         - development
         - main
-        - travis-configuration
+        - travis-conf
 install:
     - docker-compose build
     
