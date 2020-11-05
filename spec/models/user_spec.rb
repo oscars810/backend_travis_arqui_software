@@ -7,5 +7,5 @@ RSpec.describe User, type: :model do
 
     it 'has invalid factory without name' do
         expect(build(:user, email: nil)).not_to be_valid
-      end
+    end
 end
