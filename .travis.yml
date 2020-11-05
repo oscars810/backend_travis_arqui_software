@@ -18,6 +18,9 @@ install:
 
 script:
     - docker-compose up -d
+    - bundle exec rails db:create
+    - bundle exec rails db:schema:load
+    - bundle exec rspec
     - docker-compose run app rspec --format documentation spec/models/user_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
