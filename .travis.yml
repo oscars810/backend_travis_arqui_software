@@ -21,17 +21,18 @@ branches:
 install:
     - docker-compose build 
 
+postgres:
+    adapter: postgresql
+    database: myapp_test
+    username: postgres
+   
 before_script:
     - cp config/database.travis.yml config/database.yml
-    - psql -c 'create database my_app_test' -U postgres
-
-bundler_args: --binstubs=./bundler_stubs
+    - "psql -c 'create database myapp_test;' -U postgres"
+    - "rake db:migrate"
 
 script:
     - docker-compose up -d
-    - RAILS_ENV=test bundle exec rake db:migrate --trace
-    - bundle exec rake db:test:prepare
-    - bundle exec rspec spec/
     - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
