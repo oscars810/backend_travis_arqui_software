@@ -9,6 +9,9 @@ services:
     - docker
     - postgresql
 
+addons:
+    postgresql: '9.6'
+
 branches:
     - only:
         - development
@@ -18,12 +21,11 @@ install:
     - docker-compose build 
 
 before_script:
-    - psql -c 'create database travis_ci_test;' -U postgres
+    - cp config/database.yml.travis config/database.yml
 
 script:
     - docker-compose up -d
-    - docker-compose run app rails db:create
-    - docker-compose run app rails db:migrate
+    - bundle exec rails db:reset db:setup db:migrate RAILS_ENV=test
     - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
