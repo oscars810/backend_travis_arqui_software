@@ -22,9 +22,8 @@ before_script:
 
 script:
     - docker-compose up -d
-    - RAILS_ENV=test bundle exec rake db:migrate --trace
-    - bundle exec rake db:test:prepare
-    - bundle exec rspec
+    - docker-compose run app rails db:create
+    - docker-compose run app rails db:migrate
     - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
