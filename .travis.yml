@@ -7,6 +7,8 @@ env:
 
 services:
     - docker
+    - postgresql
+
 branches:
     - only:
         - development
@@ -14,9 +16,15 @@ branches:
         - travis-conf
 install:
     - docker-compose build 
-    
+
+before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
+
 script:
     - docker-compose up -d
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+    - bundle exec rspec
     - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
