@@ -3,7 +3,8 @@ rvm:
 - 2.5.0
 
 env:
-    -AWS_USER_ID="379212824536" AWS_ECR_APP="379212824536.dkr.ecr.us-east-1.amazonaws.com/backend-g25"
+    - AWS_USER_ID="379212824536" AWS_ECR_APP="379212824536.dkr.ecr.us-east-1.amazonaws.com/backend-g25"
+    - DB=postgresql
 
 services:
     - docker
@@ -21,11 +22,16 @@ install:
     - docker-compose build 
 
 before_script:
-    - cp config/database.yml.travis config/database.yml
+    - cp config/database.travis.yml config/database.yml
+    - psql -c 'create database my_app_test' -U postgres
+
+bundler_args: --binstubs=./bundler_stubs
 
 script:
     - docker-compose up -d
-    - bundle exec rails db:reset db:setup db:migrate RAILS_ENV=test
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+    - bundle exec rspec spec/
     - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
