@@ -13,11 +13,11 @@ branches:
         - main
         - travis-conf
 install:
-    - docker-compose build
+    - docker-compose build 
     
 script:
     - docker-compose up -d
-    - echo "no test!"
+    - docker-compose run app rspec --format documentation spec/requests/user_request_spec.rb
     #- sed -i -e 's/\r$/\n/' start.sh
     #- sed -i -e 's/\r$/\n/' stop.sh
     #- sed -i -e 's/\r$/\n/' install.sh
