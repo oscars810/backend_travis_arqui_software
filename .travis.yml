@@ -4,14 +4,9 @@ rvm:
 
 env:
     - AWS_USER_ID="379212824536" AWS_ECR_APP="379212824536.dkr.ecr.us-east-1.amazonaws.com/backend-g25"
-    - DB=postgresql
 
 services:
     - docker
-    - postgresql
-
-addons:
-    postgresql: '9.6'
 
 branches:
     - only:
@@ -20,15 +15,6 @@ branches:
         - travis-conf
 install:
     - docker-compose build 
-
-postgres:
-    adapter: postgresql
-    database: myapp_test
-    username: postgres
-   
-before_script:
-    - cp config/database.travis.yml config/database.yml
-    - psql -c 'create database myapp_test;' -U postgres
 
 script:
     - docker-compose up -d
